@@ -1,0 +1,8 @@
+# 一次性验收容器：运行 Vitest 单元测试 + Playwright 端到端测试。
+# 镜像版本与 package.json 中 @playwright/test 保持一致，以复用预装浏览器。
+FROM mcr.microsoft.com/playwright:v1.48.2-jammy
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+CMD ["npm", "run", "verify"]

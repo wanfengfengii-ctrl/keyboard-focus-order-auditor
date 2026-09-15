@@ -1,0 +1,107 @@
+:root {
+  color-scheme: light;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    'PingFang SC',
+    'Microsoft YaHei',
+    sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f5f6f8;
+  color: #1f2329;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 16px 64px;
+}
+
+h1 {
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+
+.hint {
+  color: #555;
+  margin: 0 0 16px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  padding: 10px;
+  border: 1px solid #c4c8cf;
+  border-radius: 6px;
+  background: #fff;
+  resize: vertical;
+}
+
+button {
+  margin-top: 12px;
+  padding: 8px 28px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  background: #1a5fd7;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #154cae;
+}
+
+.result {
+  margin-top: 24px;
+}
+
+.result h2 {
+  font-size: 18px;
+  margin: 0 0 8px;
+}
+
+.result ol {
+  margin: 0;
+  padding-left: 24px;
+  background: #fff;
+  border: 1px solid #e0e3e8;
+  border-radius: 6px;
+}
+
+.result li {
+  padding: 6px 8px;
+}
+
+.result li + li {
+  border-top: 1px solid #eef0f3;
+}
+
+.invalid {
+  color: #b3261e;
+  font-weight: 600;
+}
+
+.match {
+  color: #146c2e;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.mismatch {
+  color: #b3261e;
+  font-size: 18px;
+  font-weight: 700;
+}

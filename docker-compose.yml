@@ -1,0 +1,25 @@
+services:
+  # 唯一的静态 Web 应用
+  web:
+    build: .
+    image: tab-order-verifier-web
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost/"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # 一次性验收服务：跑完测试即退出
+  verify:
+    build:
+      context: .
+      dockerfile: Dockerfile.verify
+    depends_on:
+      web:
+        condition: service_healthy
+    environment:
+      BASE_URL: http://web:80
+      CI: "1"
+    shm_size: 1gb
