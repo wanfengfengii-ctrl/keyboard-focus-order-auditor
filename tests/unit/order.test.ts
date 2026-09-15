@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { computeActualOrder } from '../../src/lib/order';
+import { parseOrderDocument } from '../../src/lib/validate';
 import type { ElementItem } from '../../src/lib/validate';
 
-function el(id: string, tabindex: number, overrides: Partial<ElementItem> = {}): ElementItem {
+function el(
+  id: string,
+  tabindex: number | bigint,
+  overrides: Partial<ElementItem> = {},
+): ElementItem {
   return { id, tabindex, disabled: false, hidden: false, ...overrides };
 }
 
@@ -54,5 +59,34 @@ describe('computeActualOrder', () => {
 
   it('空 elements 返回空数组', () => {
     expect(computeActualOrder([])).toEqual([]);
+  });
+
+  it('超出安全范围的大整数按精确值排序，不会被当成相同', () => {
+    const elements = [
+      el('big-2', 9007199254740993n),
+      el('big-1', 9007199254740992n),
+      el('small', 1),
+    ];
+    expect(computeActualOrder(elements)).toEqual(['small', 'big-1', 'big-2']);
+  });
+
+  it('number 与 bigint 混合时按数值统一排序', () => {
+    const elements = [el('a', 5n), el('b', 2), el('c', 3n), el('d', 0)];
+    expect(computeActualOrder(elements)).toEqual(['b', 'c', 'a', 'd']);
+  });
+
+  it('回归：JSON 文本中的大整数 tabindex 保持互不相同', () => {
+    // 9007199254740992 与 9007199254740993 在 IEEE 754 双精度下相等，
+    // 精确解析后必须区分为两个不同的值。
+    const text =
+      '{"elements":[' +
+      '{"id":"b","tabindex":9007199254740993,"disabled":false,"hidden":false},' +
+      '{"id":"a","tabindex":9007199254740992,"disabled":false,"hidden":false}' +
+      '],"expectedOrder":["a","b"]}';
+    const parsed = parseOrderDocument(text);
+    expect(parsed.ok).toBe(true);
+    if (parsed.ok) {
+      expect(computeActualOrder(parsed.doc.elements)).toEqual(['a', 'b']);
+    }
   });
 });

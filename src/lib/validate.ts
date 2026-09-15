@@ -1,6 +1,9 @@
+import { parseJson } from './json';
+
 export interface ElementItem {
   id: string;
-  tabindex: number;
+  /** 整数；超出 Number 安全整数范围时为 BigInt，保证精确可比。 */
+  tabindex: number | bigint;
   disabled: boolean;
   hidden: boolean;
 }
@@ -35,7 +38,7 @@ function hasExactKeys(value: Record<string, unknown>, keys: readonly string[]): 
 export function parseOrderDocument(text: string): ParseResult {
   let data: unknown;
   try {
-    data = JSON.parse(text);
+    data = parseJson(text);
   } catch {
     return { ok: false };
   }
@@ -59,7 +62,10 @@ export function parseOrderDocument(text: string): ParseResult {
     if (typeof id !== 'string' || id.length === 0 || ids.has(id)) {
       return { ok: false };
     }
-    if (typeof tabindex !== 'number' || !Number.isInteger(tabindex)) {
+    const isIntegerTabindex =
+      typeof tabindex === 'bigint' ||
+      (typeof tabindex === 'number' && Number.isInteger(tabindex));
+    if (!isIntegerTabindex) {
       return { ok: false };
     }
     if (typeof disabled !== 'boolean' || typeof hidden !== 'boolean') {

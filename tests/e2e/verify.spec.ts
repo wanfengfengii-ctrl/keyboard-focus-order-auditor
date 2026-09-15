@@ -62,3 +62,19 @@ test('引用未知 id 的文档同样无效', async ({ page }) => {
   await expect(page.getByTestId('invalid-message')).toHaveText('文档无效');
   await expect(page.getByTestId('actual-order')).toHaveCount(0);
 });
+
+test('超出安全范围的大整数 tabindex 按精确值排序', async ({ page }) => {
+  // 9007199254740992 与 9007199254740993 在双精度浮点下相等，
+  // 页面必须区分二者并给出升序结果。
+  const raw = `{
+    "elements": [
+      { "id": "b", "tabindex": 9007199254740993, "disabled": false, "hidden": false },
+      { "id": "a", "tabindex": 9007199254740992, "disabled": false, "hidden": false },
+      { "id": "z", "tabindex": 0, "disabled": false, "hidden": false }
+    ],
+    "expectedOrder": ["a", "b", "z"]
+  }`;
+  await pasteAndVerify(page, raw);
+  await expect(page.getByTestId('actual-order').locator('li')).toHaveText(['a', 'b', 'z']);
+  await expect(page.getByTestId('conclusion')).toHaveText('一致');
+});

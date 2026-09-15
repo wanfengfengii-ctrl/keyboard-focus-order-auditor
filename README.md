@@ -37,7 +37,8 @@ npm run verify       # 单元 + 端到端全量验收
 - 根对象**必须且仅含** `elements` 与 `expectedOrder` 两个字段。
 - `elements` 为数组，按 DOM 先后排列；每项**必须且仅含**四个字段：
   - `id`：非空字符串，且在 `elements` 内唯一；
-  - `tabindex`：整数（可为负整数）；
+  - `tabindex`：整数（可为负整数；超出 ±2^53−1 安全范围的大整数按
+    精确值参与排序，不会因浮点精度丢失而被误判为相同）；
   - `disabled`、`hidden`：布尔值。
 - `expectedOrder` 为数组，每项为字符串、互不重复，且必须引用
   `elements` 中已声明的 `id`（允许只覆盖部分元素）。
@@ -71,6 +72,7 @@ npm run verify       # 单元 + 端到端全量验收
 ## 目录结构
 
 ```
+src/lib/json.ts       # 精确 JSON 解析（大整数以 BigInt 保留精度）
 src/lib/validate.ts   # JSON 解析与全部合法性检查
 src/lib/order.ts      # Tab 顺序推导
 src/App.tsx           # 页面与结论展示

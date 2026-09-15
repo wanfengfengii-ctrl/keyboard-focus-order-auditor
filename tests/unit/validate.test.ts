@@ -97,6 +97,20 @@ describe('parseOrderDocument', () => {
     ).toBe(true);
   });
 
+  it('接受超出安全范围的大整数 tabindex 并保持精确值', () => {
+    const text =
+      '{"elements":[' +
+      '{"id":"a","tabindex":9007199254740993,"disabled":false,"hidden":false},' +
+      '{"id":"b","tabindex":-9007199254740993,"disabled":false,"hidden":false}' +
+      '],"expectedOrder":["a","b"]}';
+    const result = parseOrderDocument(text);
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.doc.elements[0].tabindex).toBe(9007199254740993n);
+      expect(result.doc.elements[1].tabindex).toBe(-9007199254740993n);
+    }
+  });
+
   it('disabled 与 hidden 必须是布尔值', () => {
     expect(
       parse(docWith([{ id: 'a', tabindex: 0, disabled: 0, hidden: false }])).ok,
