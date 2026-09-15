@@ -64,6 +64,49 @@ button:hover {
   background: #154cae;
 }
 
+button.secondary {
+  margin-top: 0;
+  padding: 6px 18px;
+  font-size: 14px;
+  background: #eef1f5;
+  color: #1f2329;
+  border: 1px solid #c4c8cf;
+}
+
+button.secondary:hover:not(:disabled) {
+  background: #e0e4ea;
+}
+
+button.secondary:disabled {
+  color: #9aa0a8;
+  cursor: not-allowed;
+  background: #f2f3f5;
+}
+
+.diff-nav {
+  margin-top: 12px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #e0e3e8;
+  border-radius: 6px;
+}
+
+.diff-detail {
+  margin: 0 0 10px;
+}
+
+.diff-detail code {
+  margin: 0 4px;
+  padding: 1px 6px;
+  background: #f2f3f5;
+  border-radius: 4px;
+}
+
+.diff-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .result {
   margin-top: 24px;
 }

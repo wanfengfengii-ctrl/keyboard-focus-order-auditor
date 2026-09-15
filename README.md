@@ -69,14 +69,25 @@ npm run verify       # 单元 + 端到端全量验收
 4. **判定**：仅当实际序列与 `expectedOrder` 逐项完全相同（长度一致且
    每个位置的 id 相同）时显示“一致”，否则显示“不一致”。
 
+## 差异导航
+
+结论为“不一致”时，页面在结论下方按位置列出每一处差异：
+“第几处差异、期望、实际”，并提供“上一处”“下一处”按顺序复核；
+到达首处或末处后对应按钮不可用。任一侧序列因长度不足而缺项时，
+该侧显示“无对应元素”。一致时不渲染差异导航。
+
+重新核验合法文档（无论一致与否）后，导航回到第一处；核验非法文档时
+仅显示“文档无效”，旧序列、结论与差异详情一并清空。
+
 ## 目录结构
 
 ```
 src/lib/json.ts       # 精确 JSON 解析（大整数以 BigInt 保留精度）
 src/lib/validate.ts   # JSON 解析与全部合法性检查
 src/lib/order.ts      # Tab 顺序推导
-src/App.tsx           # 页面与结论展示
-tests/unit/           # Vitest：校验与排序边界
+src/lib/diff.ts       # 一致性差异计算契约（按位置比对）
+src/App.tsx           # 页面、结论与差异导航展示
+tests/unit/           # Vitest：校验、排序边界与差异计算
 tests/e2e/            # Playwright：粘贴到结论主链路
 Dockerfile            # 静态 Web 应用（nginx）
 Dockerfile.verify     # 一次性验收容器
